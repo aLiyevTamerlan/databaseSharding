@@ -5,5 +5,6 @@ router = APIRouter()
 
 @router.get("/")
 def test(user_id: str):
-    print(hash(user_id) %3)
-    return True
+    a = hash(user_id)
+    print(-5122704023163466000 %3)
+    return {"hash_value":a, "div_mod": -5122704023163466000 %3}
