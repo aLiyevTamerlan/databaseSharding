@@ -4,8 +4,8 @@ from sqlalchemy.orm import sessionmaker
 
 
 DATABASE_URLS = {
-    0: "postgresql://postgres:password@localhost:5432/shard_0",
-    1: "postgresql://postgres:password@localhost:5432/shard_1",
+    0: "postgresql://postgres:postgres@localhost:5432/shard_0",
+    1: "postgresql://postgres:postgres@localhost:5432/shard_1",
 }
 
 
