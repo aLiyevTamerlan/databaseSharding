@@ -10,7 +10,7 @@ DATABASE_URLS = {
 
 
 engines = {
-    shard_id: create_engine(url, echo=True)
+    shard_id: create_engine(url, echo=False)
     for shard_id, url in DATABASE_URLS.items()
 }
 

@@ -1,6 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
+from app.user.deps import get_user_service
 from app.user.domain.models.user import User
+from app.user.domain.services.user_service import UserService
 from app.user.presentation.schemas.user import UserCreateSchema
 
 
@@ -14,7 +16,6 @@ def test(user_id: str):
 
 
 @router.post("/create")
-def create_user(payload: UserCreateSchema):
-    user = User(username=payload.username)
-    print(user.id)
+def create_user(payload: UserCreateSchema, service: UserService = Depends(get_user_service)):
+    service.create(username=payload.username)
     return {"message": "User created"}
