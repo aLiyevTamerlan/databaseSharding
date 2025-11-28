@@ -18,7 +18,7 @@ class IUserRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, user: User) -> User:
+    def update(self, user: User, data: dict) -> User:
         pass
 
     @abstractmethod
