@@ -16,6 +16,6 @@ class Profile(Base):
         nullable=False,
     )
     # SHARDING KEY - this determines which shard!
-    user_id = Column(Integer, nullable=False)
+    user_id = Column(UUID, nullable=False)
     bio = Column(String(500))
     avatar_url = Column(String(255))
