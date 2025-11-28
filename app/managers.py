@@ -7,7 +7,7 @@ from app.db.session import DATABASE_URLS, session_makers
 class SharedManager:
     def __init__(self, shared_nums: int = len(DATABASE_URLS)) -> None:
         self.shared_nums = shared_nums
-        self.session_makers = session_makers
+        self._session_makers = session_makers
     def get_shard_id(self, entity_id: int) -> int:
         return hash(entity_id) % self.shared_nums
     
@@ -18,7 +18,7 @@ class SharedManager:
     @contextmanager
     def get_session(self, entity_id: int):
 
-        session_maker = self.get_session_maker(entity_id, shard_sessions=self.session_makers)
+        session_maker = self.get_session_maker(entity_id, shard_sessions=self._session_makers)
         session = session_maker()
         try:
             yield session
@@ -30,4 +30,19 @@ class SharedManager:
             raise
         finally:
             session.close()
+
+    @contextmanager
+    def get_all_sessions(self):
+        sessions = {
+            shard_id: maker()
+            for shard_id, maker in self._session_makers.items()
+        }
+        try:
+            yield sessions
+        finally:
+            for s in sessions.values():
+                s.close()
+
+    def shard_ids(self) -> list[int]:
+        return list(self._session_makers.keys())
 
