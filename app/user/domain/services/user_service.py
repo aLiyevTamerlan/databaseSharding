@@ -1,5 +1,5 @@
 from typing import List, Optional, Callable
-from uuid import uuid4, UUID
+from uuid import  UUID
 
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
@@ -29,14 +29,14 @@ class UserService:
 
         return UserOutSchema.model_validate(user)
 
-    def create(self, username: str, db: Session) -> User:
-        user_id = uuid4()
+    def create(self, user_id: UUID, username: str, db: Session) -> User:
+
         new_user = User(
             id=user_id,
             username=username,
         )
-        with self._shared_manager.get_session(entity_id=user_id) as db:
-            repo = self._repo_factory(db)
+        
+        repo = self._repo_factory(db)
         return repo.create(new_user)
 
     def update(self, user_id: UUID, data: dict, db: Session) -> Optional[User]:

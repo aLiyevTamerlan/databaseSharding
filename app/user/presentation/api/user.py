@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from uuid import UUID
+from uuid import UUID, uuid4
 from app.user.deps import get_user_service, get_shared_manager
 from app.user.domain.models.user import User
 from app.user.domain.services.user_service import UserService
@@ -11,8 +11,10 @@ router = APIRouter()
 
 
 @router.post("/")
-def create_user(payload: UserCreateSchema, service: UserService = Depends(get_user_service)):
-    service.create(username=payload.username)
+def create_user(payload: UserCreateSchema, service: UserService = Depends(get_user_service), shared_manager=Depends(get_shared_manager)):
+    user_id = uuid4()
+    with shared_manager.get_session(entity_id=user_id) as db:
+        service.create(username=payload.username, user_id=user_id,  db=db)
     return {"message": "User created"}
 
 @router.get("/{user_id}", response_model=UserOutSchema)
