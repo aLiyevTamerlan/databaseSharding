@@ -28,3 +28,10 @@ def update_user(user_id: UUID, payload: UserUpdateSchema, service: UserService =
         updated_user: User = service.update(user_id=user_id, data=payload.model_dump(), db=db)
     
     return updated_user
+
+
+@router.delete("/{user_id}")
+def delete_user(user_id: UUID, service: UserService = Depends(get_user_service), shared_manager=Depends(get_shared_manager)):
+    with shared_manager.get_session(entity_id=user_id) as db:
+        service.delete(user_id=user_id, db=db)
+    return {"message": "User deleted"}

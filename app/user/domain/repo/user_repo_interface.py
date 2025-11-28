@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
+from uuid import UUID
 
 from app.user.domain.models.user import User
 
@@ -10,7 +11,7 @@ class IUserRepository(ABC):
         pass
 
     @abstractmethod
-    def get_by_id(self, user_id: int) -> Optional[User]:
+    def get_by_id(self, user_id: UUID) -> Optional[User]:
         pass
 
     @abstractmethod
@@ -22,5 +23,5 @@ class IUserRepository(ABC):
         pass
 
     @abstractmethod
-    def delete(self, user: User) -> None:
+    def delete(self, user_id: UUID) -> None:
         pass

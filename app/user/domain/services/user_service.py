@@ -46,6 +46,13 @@ class UserService:
         return UserOutSchema.model_validate(updated_user)
     
     
-    def delete(self, user_id: UUID) -> bool:
-        pass
+    def delete(self, user_id: UUID, db: Session) -> bool:
+        repo = self._repo_factory(db)
+        user = repo.get_by_id(user_id)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found",
+            )
+        return repo.delete(user_id=user_id)
 
