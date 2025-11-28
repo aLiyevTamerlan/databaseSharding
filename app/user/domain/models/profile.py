@@ -1,14 +1,21 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+import uuid
+from sqlalchemy import UUID, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.db.base import Base
 
 class Profile(Base):
     __tablename__ = "profiles"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    full_name = Column(String, nullable=True)
-    bio = Column(String, nullable=True)
-
-    user = relationship("User", back_populates="profile")
+    
+    # Local unique ID - can use database default
+    id = Column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,  # OK to use default here
+        unique=True,
+        nullable=False,
+    )
+    # SHARDING KEY - this determines which shard!
+    user_id = Column(Integer, nullable=False, index=True)
+    bio = Column(String(500))
+    avatar_url = Column(String(255))

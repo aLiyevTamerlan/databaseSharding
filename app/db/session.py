@@ -4,9 +4,10 @@ from sqlalchemy.orm import sessionmaker
 
 
 DATABASE_URLS = {
-    0: "sqlite:///./shard_0.db",
-    1: "sqlite:///./shard_1.db",
+    0: "postgresql://postgres:password@localhost:5432/shard_0",
+    1: "postgresql://postgres:password@localhost:5432/shard_1",
 }
+
 
 engines = {
     shard_id: create_engine(url, echo=True)
