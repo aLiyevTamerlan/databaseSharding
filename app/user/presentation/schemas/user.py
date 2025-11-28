@@ -1,4 +1,11 @@
 from pydantic import BaseModel
-
-class UserCreateSchema(BaseModel):
+from uuid import UUID
+class UserBaseSchema(BaseModel):
     username: str
+
+class UserCreateSchema(UserBaseSchema):
+    pass
+
+class UserOutSchema(UserBaseSchema):
+    id: UUID
+    model_config = {'from_attributes': True}

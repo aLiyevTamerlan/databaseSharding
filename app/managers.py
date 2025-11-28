@@ -7,23 +7,24 @@ from app.db.session import DATABASE_URLS, session_makers
 class SharedManager:
     def __init__(self, shared_nums: int = len(DATABASE_URLS)) -> None:
         self.shared_nums = shared_nums
-
+        self.session_makers = session_makers
     def get_shard_id(self, entity_id: int) -> int:
         return hash(entity_id) % self.shared_nums
     
     def get_session_maker(self, entity_id: int, shard_sessions: dict[int, any]) -> any:
         shard_id = self.get_shard_id(entity_id)
-        print(shard_id)
         return shard_sessions[shard_id]
     
     @contextmanager
     def get_session(self, entity_id: int):
 
-        session_maker = self.get_session_maker(entity_id, shard_sessions=session_makers)
+        session_maker = self.get_session_maker(entity_id, shard_sessions=self.session_makers)
         session = session_maker()
         try:
             yield session
+            # session.flush()
             session.commit()
+
         except Exception:
             session.rollback()
             raise

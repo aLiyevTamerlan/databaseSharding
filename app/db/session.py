@@ -15,6 +15,11 @@ engines = {
 }
 
 session_makers = {
-    shard_id: sessionmaker(bind=engine)
+    shard_id: sessionmaker(
+        bind=engine,
+        autocommit=False,
+        autoflush=False,
+        # expire_on_commit=False,
+    )
     for shard_id, engine in engines.items()
 }

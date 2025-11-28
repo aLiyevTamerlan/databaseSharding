@@ -1,6 +1,7 @@
 from typing import List, Optional, Callable
 from uuid import uuid4, UUID
 
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from app.user.domain.models.user import User
 from app.user.domain.repo.user_repo_interface import IUserRepository
@@ -14,10 +15,19 @@ class UserService:
     def get_all(self) -> List[User]:
         pass
 
-    def get_by_id(self, user_id: UUID) -> Optional[User]:
+    def get_by_id(self, user_id: UUID) -> User:
         with self._shared_manager.get_session(entity_id=user_id) as db:
             repo = self._repo_factory(db)
-        return repo.get_by_id(user_id)
+            user = repo.get_by_id(user_id)
+            db.expunge(user)
+
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found",
+            )
+
+        return user
 
     def create(self, username: str) -> User:
         user_id = uuid4()
