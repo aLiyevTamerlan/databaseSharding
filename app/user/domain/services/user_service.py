@@ -13,7 +13,8 @@ class UserService:
         self._repo_factory = repo_factory
         
     def get_all(self, db: Session) -> List[User]:
-        pass
+        repo = self._repo_factory(db)
+        return repo.get_all()
 
     def get_by_id(self, user_id: UUID, db: Session) -> UserOutSchema:
         
