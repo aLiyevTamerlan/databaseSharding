@@ -48,11 +48,34 @@ DB_SHARDS="postgresql://USER:PASS@HOST:PORT/shard_0,postgresql://USER:PASS@HOST:
 - Comma-separated DSNs; order defines shard IDs (index 0, 1, 2, ...).
 - Add more shards by appending more URLs.
 
+## Install deps
+1. Install `uv`:
+
+   ```bash
+   # macOS and Linux
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+
+   # Windows
+   powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+   ```
+
+2. Create and activate a virtual environment:
+
+   ```bash
+   uv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. Install dependencies:
+
+   ```bash
+   uv sync
+   ```
+
 ## Running locally
 1) **PostgreSQL shards:** Create databases (e.g., `shard_0`, `shard_1`) and set `DB_SHARDS` accordingly in `.env`.
-2) **Install deps:** `python -m venv .venv && .\\.venv\\Scripts\\activate` then `pip install .` (uses `pyproject.toml`).
-3) **Migrate all shards:** `alembic upgrade head` (runs against every URL in `DATABASE_URLS`).
-4) **Run the API:** `uvicorn main:app --reload` and hit `http://127.0.0.1:8000/docs` for Swagger.
+2) **Migrate all shards:** `alembic upgrade head` (runs against every URL in `DATABASE_URLS`).
+3) **Run the API:** `uvicorn main:app --reload` and hit `http://127.0.0.1:8000/docs` for Swagger.
 
 ### Example requests
 - Create user
