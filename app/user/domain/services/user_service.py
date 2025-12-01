@@ -5,7 +5,6 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from app.user.domain.models.user import User
 from app.user.domain.repo.user_repo_interface import IUserRepository
-from app.managers import SharedManager
 from app.user.presentation.schemas.user import UserCreateSchema, UserOutSchema
 
 class UserService:
