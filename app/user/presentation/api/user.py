@@ -26,7 +26,7 @@ def get_all_users(service: UserService = Depends(get_user_service), shared_manag
 def create_user(payload: UserCreateSchema, service: UserService = Depends(get_user_service), shared_manager: SharedManager =Depends(get_shared_manager)):
     user_id = uuid4()
     with shared_manager.get_session(entity_id=user_id) as db:
-        service.create(username=payload.username, user_id=user_id,  db=db)
+        service.create(data=payload, user_id=user_id, db=db)
     return {"message": "User created"}
 
 @router.get("/{user_id}", response_model=UserOutSchema)

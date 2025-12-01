@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.user.domain.models.user import User
 from app.user.domain.repo.user_repo_interface import IUserRepository
 from app.managers import SharedManager
-from app.user.presentation.schemas.user import UserOutSchema
+from app.user.presentation.schemas.user import UserCreateSchema, UserOutSchema
 
 class UserService:
     def __init__(self, repo_factory: Callable[[Session], IUserRepository]) -> None:
@@ -30,13 +30,12 @@ class UserService:
 
         return UserOutSchema.model_validate(user)
 
-    def create(self, user_id: UUID, username: str, db: Session) -> User:
-
+    def create(self, data: UserCreateSchema, user_id: UUID, db: Session) -> User:
         new_user = User(
             id=user_id,
-            username=username,
+            **data.model_dump(),
         )
-        
+
         repo = self._repo_factory(db)
         return repo.create(new_user)
 

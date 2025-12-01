@@ -7,7 +7,7 @@ from alembic import context
 
 from app.db.base import Base
 from app.db.session import engines
-from app.user.domain.models.base import *  # noqa: F403,F401
+from app.user.domain.models import User, Profile
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

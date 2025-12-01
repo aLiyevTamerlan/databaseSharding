@@ -3,8 +3,13 @@ from uuid import UUID
 class UserBaseSchema(BaseModel):
     username: str
 
+class ProfileBaseSchema(BaseModel):
+    bio: str
+    avatar_url : str
+
 class UserCreateSchema(UserBaseSchema):
-    pass
+    profile: ProfileBaseSchema
+
 
 class UserUpdateSchema(UserBaseSchema):
     pass
