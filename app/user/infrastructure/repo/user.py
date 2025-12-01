@@ -1,6 +1,6 @@
 from typing import List, Optional
 from uuid import UUID
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.user.domain.models.user import User
 from app.user.domain.repo.user_repo_interface import IUserRepository
@@ -17,6 +17,15 @@ class UserRepository(IUserRepository):
         return (
             self._db.query(User)
             .filter(User.id == user_id)
+            .first()
+        )
+    def get_by_id_profile(self, user_id: UUID) -> Optional[User]:
+        return (
+            self._db.query(User)
+            .filter(User.id == user_id)
+            .options(
+                joinedload(User.profile)
+            )
             .first()
         )
 

@@ -19,6 +19,10 @@ class IUserRepository(ABC):
         pass
 
     @abstractmethod
+    def get_by_id_profile(self, user_id: UUID) -> Optional[User]:
+        pass
+
+    @abstractmethod
     def update(self, user: User, data: dict) -> User:
         pass
 

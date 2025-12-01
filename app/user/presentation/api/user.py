@@ -5,7 +5,7 @@ from app.managers import SharedManager
 from app.user.deps import get_user_service, get_shared_manager
 from app.user.domain.models.user import User
 from app.user.domain.services.user_service import UserService
-from app.user.presentation.schemas.user import UserCreateSchema, UserOutSchema, UserUpdateSchema
+from app.user.presentation.schemas.user import UserCreateSchema, UserOutSchema, UserUpdateSchema, UserOutProfileSchema
 
 
 router = APIRouter()
@@ -25,14 +25,15 @@ def get_all_users(service: UserService = Depends(get_user_service), shared_manag
 @router.post("/")
 def create_user(payload: UserCreateSchema, service: UserService = Depends(get_user_service), shared_manager: SharedManager =Depends(get_shared_manager)):
     user_id = uuid4()
+    profile_id = uuid4()
     with shared_manager.get_session(entity_id=user_id) as db:
-        service.create(data=payload, user_id=user_id, db=db)
+        service.create(data=payload, user_id=user_id, db=db, profile_id=profile_id)
     return {"message": "User created"}
 
-@router.get("/{user_id}", response_model=UserOutSchema)
+@router.get("/{user_id}", response_model=UserOutProfileSchema)
 def get_user_by_id(user_id: UUID, service: UserService = Depends(get_user_service), shared_manager: SharedManager =Depends(get_shared_manager)):
     with shared_manager.get_session(entity_id=user_id) as db:
-        user: User = service.get_by_id(user_id, db=db)
+        user: User = service.get_by_id_profile(user_id, db=db)
     
     return user
 
